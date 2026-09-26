@@ -1,0 +1,21 @@
+# Google App Engine (standard) config for the static build in dist/.
+# Deploy with: npm run build && gcloud app deploy
+runtime: python312
+
+handlers:
+  - url: /assets
+    static_dir: dist/assets
+    secure: always
+    expiration: 365d
+
+  - url: /(.*\.(svg|png|ico|txt))$
+    static_files: dist/\1
+    upload: dist/.*\.(svg|png|ico|txt)$
+    secure: always
+
+  - url: /.*
+    static_files: dist/index.html
+    upload: dist/index.html
+    secure: always
+    http_headers:
+      Cache-Control: no-cache

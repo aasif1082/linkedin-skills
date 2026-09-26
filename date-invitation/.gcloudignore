@@ -1,0 +1,3 @@
+# Shared by Cloud Run (--source) and App Engine deploys.
+.git
+node_modules/
