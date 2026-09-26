@@ -7,7 +7,7 @@
  */
 export const CONFIG = {
   /** Her name, used in "Hey ___ ❤️" and after confirmation. */
-  GIRLFRIEND_NAME: 'Beautiful',
+  GIRLFRIEND_NAME: 'Lakshmi',
 
   /** Your name, shown in the footer and the calendar invite signature. */
   YOUR_NAME: 'Your favourite person',

@@ -32,7 +32,7 @@ Everything lives in **`src/config.ts`**:
 
 | Setting | What it does | Default |
 |---|---|---|
-| `GIRLFRIEND_NAME` | "Hey ___ ❤️", "Can't wait for our date, ___." | `Beautiful` |
+| `GIRLFRIEND_NAME` | "Hey ___ ❤️", "Can't wait for our date, ___." | `Lakshmi` |
 | `YOUR_NAME` | Signature at the end of the calendar invite | `Your favourite person` |
 | `EVENT_TITLE` | Calendar event title | `Date with ❤️` |
 | `DEFAULT_MESSAGE` | Placeholder for her note, and shown on the card if she leaves it empty | `Can't wait ❤️` |
