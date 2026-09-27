@@ -21,7 +21,9 @@ accounts, no API keys.
    **Confirm Date ❤️** stays disabled until a day and a place are filled in.
 5. **Confirmation**: the "IT'S A DATE! ❤️" card, plus
    - **Add To My Calendar**: opens Google Calendar with the event pre-filled
-   - **Download .ics**: for Apple Calendar, Outlook, Samsung and the rest
+   - **Outlook Calendar**: same idea for Outlook.com and Microsoft 365
+   - **Download .ics**: for Apple Calendar, Samsung and the rest (hidden when
+     the page runs inside a claude.ai artifact, whose sandbox blocks downloads)
 
 If she doesn't pick a time, the event is all-day. If she does, it's a 2-hour
 event at that time in her own timezone.
@@ -65,6 +67,9 @@ npm run preview      # serves dist/ at http://localhost:4173
 ```
 
 `dist/` is plain static files (about 80 KB gzipped). Any static host can serve it.
+
+Need it as one file? `npm run build:single` writes `dist-single/date-invite.html`
+with all CSS and JS inlined, ready for hosts that take a single page.
 
 ## Deploy to Google Cloud
 

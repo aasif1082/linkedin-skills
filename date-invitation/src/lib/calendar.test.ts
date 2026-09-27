@@ -1,5 +1,12 @@
 import { describe, expect, it } from 'vitest';
-import { buildEvent, buildIcs, escapeText, foldLine, googleCalendarUrl } from './calendar';
+import {
+  buildEvent,
+  buildIcs,
+  escapeText,
+  foldLine,
+  googleCalendarUrl,
+  outlookCalendarUrl,
+} from './calendar';
 import { isPast, parseTime } from './dates';
 
 const EXPECTED_DESCRIPTION =
@@ -73,6 +80,26 @@ describe('googleCalendarUrl', () => {
     const url = googleCalendarUrl(buildEvent({ ...plan, place: 'Tom & Jerry’s #1 ?' }));
     expect(url).not.toContain(' ');
     expect(new URL(url).searchParams.get('location')).toBe('Tom & Jerry’s #1 ?');
+  });
+});
+
+describe('outlookCalendarUrl', () => {
+  it('pre-fills an all-day event', () => {
+    const url = new URL(outlookCalendarUrl(buildEvent(plan)));
+    expect(url.origin + url.pathname).toBe('https://outlook.live.com/calendar/0/deeplink/compose');
+    expect(url.searchParams.get('subject')).toBe('Date with ❤️');
+    expect(url.searchParams.get('startdt')).toBe('2026-09-25');
+    expect(url.searchParams.get('enddt')).toBe('2026-09-26');
+    expect(url.searchParams.get('allday')).toBe('true');
+    expect(url.searchParams.get('location')).toBe('Some Restaurant, Bangalore');
+    expect(url.searchParams.get('body')).toBe(EXPECTED_DESCRIPTION);
+  });
+
+  it('pre-fills a timed event', () => {
+    const url = new URL(outlookCalendarUrl(buildEvent({ ...plan, time: '19:30' })));
+    expect(url.searchParams.get('startdt')).toBe('2026-09-25T19:30:00');
+    expect(url.searchParams.get('enddt')).toBe('2026-09-25T21:30:00');
+    expect(url.searchParams.get('allday')).toBe('false');
   });
 });
 

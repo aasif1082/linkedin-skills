@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { CONFIG } from './config';
 import { CelebrationScreen } from './components/CelebrationScreen';
 import { ConfirmationScreen } from './components/ConfirmationScreen';
 import { FloatingHearts } from './components/FloatingHearts';
@@ -13,10 +12,6 @@ type Screen = 'invite' | 'celebrate' | 'plan' | 'confirmed';
 export default function App() {
   const [screen, setScreen] = useState<Screen>('invite');
   const [plan, setPlan] = useState<DatePlan | null>(null);
-
-  useEffect(() => {
-    document.title = `For ${CONFIG.GIRLFRIEND_NAME} ❤️`;
-  }, []);
 
   // Each screen starts at the top (the plan screen is taller than a phone).
   useEffect(() => {

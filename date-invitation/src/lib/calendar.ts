@@ -110,6 +110,38 @@ export function googleCalendarUrl(event: CalendarEvent, timeZone = localTimeZone
   return `https://calendar.google.com/calendar/render?${query}`;
 }
 
+/* ──────────────────────────────────────────────────────────────────────────
+ * OUTLOOK CALENDAR (outlook.live.com / Microsoft 365)
+ *
+ * Outlook's "compose event" deeplink works the same way as Google's: a plain
+ * link that opens a pre-filled new-event form. Dates are ISO 8601; all-day
+ * events use bare dates with `allday=true` and an exclusive end date, and
+ * timed events use local wall-clock time without an offset.
+ * ────────────────────────────────────────────────────────────────────────── */
+export function outlookCalendarUrl(event: CalendarEvent): string {
+  const params: [string, string][] = [
+    ['path', '/calendar/action/compose'],
+    ['rru', 'addevent'],
+    ['subject', event.title],
+    ['startdt', toIso(event.start)],
+    ['enddt', toIso(event.end)],
+    ['allday', String(event.allDay)],
+    ['location', event.location],
+    ['body', event.description],
+  ];
+  const query = params
+    .map(([key, value]) => `${key}=${encodeURIComponent(value)}`)
+    .join('&');
+  return `https://outlook.live.com/calendar/0/deeplink/compose?${query}`;
+}
+
+/** "20260925" -> "2026-09-25", "20260925T193000" -> "2026-09-25T19:30:00". */
+function toIso(compact: string): string {
+  const date = `${compact.slice(0, 4)}-${compact.slice(4, 6)}-${compact.slice(6, 8)}`;
+  if (compact.length === 8) return date;
+  return `${date}T${compact.slice(9, 11)}:${compact.slice(11, 13)}:${compact.slice(13, 15)}`;
+}
+
 function localTimeZone(): string {
   try {
     return Intl.DateTimeFormat().resolvedOptions().timeZone ?? '';
@@ -200,6 +232,15 @@ export function foldLine(line: string): string {
   }
   parts.push(current);
   return parts.join('\r\n ');
+}
+
+/**
+ * Whether the page can offer a file download. Inside the claude.ai artifact
+ * viewer (which provides `window.claude`) the sandbox blocks page-started
+ * downloads and .ics files, so the .ics button is hidden there.
+ */
+export function canDownloadFiles(): boolean {
+  return typeof (window as { claude?: unknown }).claude === 'undefined';
 }
 
 /** Triggers a download of the .ics file in the browser. */

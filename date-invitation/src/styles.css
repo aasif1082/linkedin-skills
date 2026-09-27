@@ -232,6 +232,17 @@ textarea {
   width: 100%;
 }
 
+.calendar-options {
+  display: flex;
+  gap: 12px;
+  width: 100%;
+}
+
+.calendar-options > .btn {
+  flex: 1 1 0;
+  padding-inline: 0.6em;
+}
+
 .btn-stack {
   flex-direction: column;
   gap: 4px;

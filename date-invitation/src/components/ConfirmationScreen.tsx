@@ -1,6 +1,13 @@
 import { useEffect, useMemo, useState } from 'react';
 import { CONFIG } from '../config';
-import { buildEvent, downloadIcs, googleCalendarUrl, type DatePlan } from '../lib/calendar';
+import {
+  buildEvent,
+  canDownloadFiles,
+  downloadIcs,
+  googleCalendarUrl,
+  outlookCalendarUrl,
+  type DatePlan,
+} from '../lib/calendar';
 import { celebrateConfirmed } from '../lib/celebrate';
 import { formatLongDate, formatTime } from '../lib/dates';
 import { Button } from './Button';
@@ -15,7 +22,9 @@ interface Props {
 export function ConfirmationScreen({ plan, onEdit }: Props) {
   const event = useMemo(() => buildEvent(plan), [plan]);
   const googleUrl = useMemo(() => googleCalendarUrl(event), [event]);
-  const [added, setAdded] = useState<'google' | 'ics' | null>(null);
+  const outlookUrl = useMemo(() => outlookCalendarUrl(event), [event]);
+  const [added, setAdded] = useState<'google' | 'outlook' | 'ics' | null>(null);
+  const showIcs = useMemo(canDownloadFiles, []);
 
   useEffect(() => {
     celebrateConfirmed();
@@ -72,23 +81,36 @@ export function ConfirmationScreen({ plan, onEdit }: Props) {
           Add To My Calendar
           <small>Opens Google Calendar</small>
         </a>
-        <Button
-          variant="secondary"
-          block
-          className="btn-stack"
-          onClick={() => {
-            downloadIcs(event);
-            setAdded('ics');
-          }}
-        >
-          Download .ics
-          <small>Apple Calendar, Outlook &amp; others</small>
-        </Button>
+        <div className="calendar-options">
+          <a
+            className="btn btn-secondary btn-stack"
+            href={outlookUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() => setAdded('outlook')}
+          >
+            Outlook Calendar
+            <small>Outlook.com &amp; Microsoft 365</small>
+          </a>
+          {showIcs && (
+            <Button
+              variant="secondary"
+              className="btn-stack"
+              onClick={() => {
+                downloadIcs(event);
+                setAdded('ics');
+              }}
+            >
+              Download .ics
+              <small>Apple &amp; others</small>
+            </Button>
+          )}
+        </div>
         {added && (
           <p className="toast" role="status">
-            {added === 'google'
-              ? 'Google Calendar opened in a new tab. Tap Save there ❤️'
-              : 'Downloaded! Open the file to add it to your calendar ❤️'}
+            {added === 'ics'
+              ? 'Downloaded! Open the file to add it to your calendar ❤️'
+              : `${added === 'google' ? 'Google' : 'Outlook'} Calendar opened in a new tab. Tap Save there ❤️`}
           </p>
         )}
         <Button variant="ghost" onClick={onEdit}>
